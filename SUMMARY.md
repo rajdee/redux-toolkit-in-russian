@@ -21,6 +21,8 @@
   * [Редьюсеры и экшены](soderzhanie/spravochnik-po-api/redyusery-i-eksheny/README.md)
     * [createReducer](soderzhanie/spravochnik-po-api/redyusery-i-eksheny/createreducer.md)
     * [createAction](soderzhanie/spravochnik-po-api/redyusery-i-eksheny/createaction.md)
+    * [createSlice](soderzhanie/spravochnik-po-api/redyusery-i-eksheny/createslice.md)
+    * [createAsyncThunk](soderzhanie/spravochnik-po-api/redyusery-i-eksheny/createasyncthunk.md)
     * [createEntityAdapter](soderzhanie/spravochnik-po-api/redyusery-i-eksheny/createentityadapter.md)
   * [Прочее](soderzhanie/spravochnik-po-api/prochee/README.md)
     * [createSelector](soderzhanie/spravochnik-po-api/prochee/createselector.md)

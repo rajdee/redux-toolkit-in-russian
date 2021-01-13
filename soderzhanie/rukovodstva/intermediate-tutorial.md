@@ -7,7 +7,9 @@ hide_title: true
 
 # Руководство для среднего уровня
 
-In the [Basic Tutorial](basic-tutorial.md), you saw the main API functions that are included in Redux Toolkit, and some short examples of why and how to use them. You also saw that you can use Redux and RTK from a plain JS script tag in an HTML page, without using React, NPM, Webpack, or any build tools.
+## Intermediate Tutorial: Redux Toolkit in Action
+
+In the [Basic Tutorial](./basic-tutorial.md), you saw the main API functions that are included in Redux Toolkit, and some short examples of why and how to use them. You also saw that you can use Redux and RTK from a plain JS script tag in an HTML page, without using React, NPM, Webpack, or any build tools.
 
 In this tutorial, you'll see how to use those APIs in a small React app. Specifically, we're going to convert the [original Redux "todos" example app](https://redux.js.org/introduction/examples#todos) to use RTK instead.
 
@@ -23,7 +25,7 @@ The complete source code for the converted application from this tutorial is ava
 
 > * Commit message here
 
-## Reviewing the Redux Todos Example
+### Reviewing the Redux Todos Example
 
 If we inspect [the current "todos" example source code](https://github.com/reduxjs/redux/tree/9c9a4d2a1c62c9dbddcbb05488f8bd77d24c81de/examples/todos/src), we can observe a few things:
 
@@ -35,9 +37,9 @@ If we inspect [the current "todos" example source code](https://github.com/redux
 
 On the one hand, this is a small example app. It's meant to illustrate the basics of actually using React and Redux together, and not necessarily be used as "the right way" to do things in a full-scale production application. On the other hand, most people will use patterns they see in docs and examples, and there's definitely room for improvement here.
 
-## Initial Conversion Steps
+### Initial Conversion Steps
 
-### Adding Redux Toolkit to the Project
+#### Adding Redux Toolkit to the Project
 
 Since the original todos example is in the Redux repo, we start by copying the Redux "todos" source code to a fresh Create-React-App project, and adding Prettier to the project to help make sure the code is formatted consistently. There's also a [jsconfig.json](https://code.visualstudio.com/docs/languages/jsconfig) file to enable us to use "absolute import paths" that start from the `/src` folder.
 
@@ -60,7 +62,7 @@ Once that's complete, you should add and commit the modified `package.json` file
 
 With that done, we can start to work on the code.
 
-### Converting the Store to Use `configureStore`
+#### Converting the Store to Use `configureStore`
 
 Just like with the "counter" example, we can replace the plain Redux `createStore` function with RTK's `configureStore`. This will automatically set up the Redux DevTools Extension for us.
 
@@ -82,17 +84,17 @@ The changes here are simple. We update `src/index.js` to import `configureStore`
 
 If you have [the Redux DevTools browser extension](https://github.com/zalmoxisus/redux-devtools-extension) installed, you should now be able to see the current state if you start the application in development mode and open the DevTools Extension. It should look like this:
 
-![Redux DevTools Extension screenshot showing initial state](https://github.com/rajdee/redux-toolkit-in-russian/tree/ae468a34043e6761354604cab9f6958137c0f359/assets/tutorials/intermediate/int-tut-01-redux-devtools.png)
+![Redux DevTools Extension screenshot showing initial state](/assets/tutorials/intermediate/int-tut-01-redux-devtools.png)
 
-## Creating the Todos Slice
+### Creating the Todos Slice
 
 The first big step for rewriting the app is to convert the todos logic into a new "slice".
 
-### Understanding Slices
+#### Understanding Slices
 
 Right now, the todos code is split into two parts. The reducer logic is in `reducers/todos.js`, while the action creators are in `actions/index.js`. In a larger app, we might even see the action type constants in their own file, like `constants/todos.js`, so they can be reused in both places.
 
-We _could_ replace those using RTK's [`createReducer`](https://github.com/rajdee/redux-toolkit-in-russian/tree/ae468a34043e6761354604cab9f6958137c0f359/docs/api/createReducer.mdx) and [`createAction`](https://github.com/rajdee/redux-toolkit-in-russian/tree/ae468a34043e6761354604cab9f6958137c0f359/docs/api/createAction.mdx) functions. However, the RTK [`createSlice` function](https://github.com/rajdee/redux-toolkit-in-russian/tree/ae468a34043e6761354604cab9f6958137c0f359/docs/api/createSlice.mdx) allows us to consolidate that logic in one place. It uses `createReducer` and `createAction` internally, so **in most apps, you won't need to use them yourself - `createSlice` is all you need**.
+We _could_ replace those using RTK's [`createReducer`](../api/createReducer.mdx) and [`createAction`](../api/createAction.mdx) functions. However, the RTK [`createSlice` function](../api/createSlice.mdx) allows us to consolidate that logic in one place. It uses `createReducer` and `createAction` internally, so **in most apps, you won't need to use them yourself - `createSlice` is all you need**.
 
 You may be wondering, "what is a 'slice', anyway?". A normal Redux application has a JS object at the top of its state tree, and that object is the result of calling the Redux [`combineReducers` function](https://redux.js.org/api/combinereducers) to join multiple reducer functions into one larger "root reducer". **We refer to one key/value section of that object as a "slice", and we use the term** [**"slice reducer"**](https://redux.js.org/recipes/structuring-reducers/splitting-reducer-logic) **to describe the reducer function responsible for updating that slice of the state**.
 
@@ -110,7 +112,7 @@ export default combineReducers({
 
 So, the combined state looks like `{todos: [], visibilityFilter: "SHOW_ALL"}`. `state.todos` is a "slice", and the `todos` reducer function is a "slice reducer".
 
-### Examining the Original Todos Reducer
+#### Examining the Original Todos Reducer
 
 The original todos reducer logic looks like this:
 
@@ -146,7 +148,7 @@ We can see that it handles three cases:
 
 It also initializes the state with a default value of `[]`, and does a default export of the reducer function.
 
-### Writing the Slice Reducer
+#### Writing the Slice Reducer
 
 We can do the same work with `createSlice`, but we can do it in a simpler way.
 
@@ -181,7 +183,7 @@ export const { addTodo, toggleTodo } = todosSlice.actions
 export default todosSlice.reducer
 ```
 
-#### `createSlice` Options
+**createSlice Options**
 
 Let's break down what this does:
 
@@ -194,7 +196,7 @@ So, the `addTodo` case reducer function will be run when an action with the type
 
 There's no `default` handler here. The reducer generated by `createSlice` will automatically handle all other action types by returning the current state, so we don't have to list that ourselves.
 
-#### "Mutable" Update Logic
+**"Mutable" Update Logic**
 
 Notice that the `addTodo` reducer is calling `state.push()`. Normally, this is bad, because [the `array.push()` function mutates the existing array](https://doesitmutate.xyz/#push), and [**Redux reducers must** _**never**_ **mutate state!**](https://redux.js.org/basics/reducers#handling-actions).
 
@@ -204,7 +206,7 @@ Similarly, `toggleTodo` doesn't map over the array or copy the matching todo obj
 
 Normal immutable update logic tends to obscure what you're actually trying to do because of all of the extra copying that has to happen. Here, the intent should be much more clear: we're adding an item to the end of an array, and we're modifying a field in a todo entry.
 
-#### Exporting the Slice Functions
+**Exporting the Slice Functions**
 
 `createSlice` returns an object that looks like this:
 
@@ -229,7 +231,7 @@ We'll need to use the action creators and the reducer in other files, so at a mi
 
 Thanks to `createSlice`, we already have our action creators and the reducer right here in one file. All we have to do is export them separately, and our todos slice file now matches the common "ducks" pattern.
 
-#### Working with Action Payloads
+**Working with Action Payloads**
 
 Speaking of the action creators, let's go back and re-examine the reducer logic for a minute.
 
@@ -243,9 +245,9 @@ It's up to the reducer to establish what it thinks `payload` should be for each 
 
 In our todos slice, `addTodo` needs two fields, `id` and `text`, so we put those into an object as `payload`. For `toggleTodo`, the only value we need is the `id` of the todo being changed. We could have made that the `payload`, but I prefer always having `payload` be an object, so I made it `action.payload.id` instead.
 
-\(As a sneak peek: there _is_ a way to customize how action object payloads are created. We'll look at that later in this tutorial, or you can look through [the `createAction` API docs](https://github.com/rajdee/redux-toolkit-in-russian/tree/ae468a34043e6761354604cab9f6958137c0f359/docs/api/createAction.mdx) for an explanation.\)
+\(As a sneak peek: there _is_ a way to customize how action object payloads are created. We'll look at that later in this tutorial, or you can look through [the `createAction` API docs](../api/createAction.mdx) for an explanation.\)
 
-### Updating the Todos Tests
+#### Updating the Todos Tests
 
 The original todos reducer has a tests file with it. We can port those over to work with our todos slice, and verify that they both work the same way.
 
@@ -288,7 +290,7 @@ An example of the changes would be:
 
 After those changes, all the tests in `todosSlice.spec.js` should pass, proving that our new RTK slice reducer works exactly the same as the original hand-written reducer!
 
-### Implementing Todo IDs
+#### Implementing Todo IDs
 
 In the original code, each newly added todo gets an ID value from an incrementing number:
 
@@ -357,9 +359,9 @@ describe('addTodo', () => {
 })
 ```
 
-## Using the New Todos Slice
+### Using the New Todos Slice
 
-### Updating the Root Reducer
+#### Updating the Root Reducer
 
 We have a shiny new todos reducer function, but it isn't hooked up to anything yet.
 
@@ -382,7 +384,7 @@ export default combineReducers({
 
 While we could have kept the imported function named as `todos` so that we can use the object literal shorthand with `combineReducers`, it's a little more clear if we name the imported function `todosReducer` and define the field as `todos: todosReducer`.
 
-### Updating the Add Todo Component
+#### Updating the Add Todo Component
 
 If we reload the app, we should still see that `state.todos` is an empty array. But, if we click on "Add Todo", nothing will happen. We're still dispatching actions whose type is `'ADD_TODO'`, while our todos slice is looking for an action type of `'todos/addTodo'`. We need to import the correct action creator and use it in the `AddTodo.js` file.
 
@@ -434,7 +436,7 @@ The input is now being handled as a standard "controlled input", with the text v
 
 Finally, we use the ["object shorthand" form of `mapDispatch`](https://react-redux.js.org/using-react-redux/connect-mapdispatch#defining-mapdispatchtoprops-as-an-object) to simplify passing the action creators to `connect`. The "bound" version of `addTodo` is passed in to the component as a prop, and it will dispatch the action as soon as we call it.
 
-### Updating the Todo List
+#### Updating the Todo List
 
 The `TodoList` and `VisibleTodoList` components have similar issues: they're using the older `toggleTodo` action creator, and the `connect` setup isn't using the "object shorthand" form of `mapDispatch`. We can fix both of those.
 
@@ -453,11 +455,11 @@ The `TodoList` and `VisibleTodoList` components have similar issues: they're usi
 
 And with that, we should now be able to add and toggle todos again, but using our new todos slice!
 
-## Creating and Using the Filters Slice
+### Creating and Using the Filters Slice
 
 Now that we've created the todos slice and hooked it up to the UI, we can do the same for the filter selection logic as well.
 
-### Writing the Filters Slice
+#### Writing the Filters Slice
 
 The filter logic is really simple. We have one action, which sets the current filter value by returning what's in the action. Here's the whole slice:
 
@@ -489,7 +491,7 @@ export default filtersSlice.reducer
 
 We've copied over the `VisibilityFilters` enum object that was originally in `actions/index.js`. The slice code just creates the one reducer, we export the action creator and reducer, and we're done.
 
-### Using the Filters Slice
+#### Using the Filters Slice
 
 As with the todos reducer, we need to import and add the visibility reducer to our root reducer:
 
@@ -557,7 +559,7 @@ Again, note that most of this doesn't have to do with RTK specifically, but it's
 
 With that done, we should be able to add a couple todos, toggle the state of some of them, and then switch the filters to change the display list.
 
-## Optimizing Todo Filtering
+### Optimizing Todo Filtering
 
 The `VisibleTodoList` component currently uses a function called `getVisibleTodos` to do the work of filtering the todos array for display. This is a "selector function", as described in the Redux docs page on [Computing Derived Data](https://redux.js.org/recipes/computing-derived-data). It encapsulates the process of reading values from the Redux store and extracting part or all of those values for use.
 
@@ -628,7 +630,7 @@ There's a couple small changes in how this is defined and used. While you can gi
 
 If we re-run the app, the filtering logic _should_ work exactly the same as before from what you can see in the UI.
 
-## Cleanup
+### Cleanup
 
 That's the end of the actual conversion work. We now have a bunch of action and reducer files that are no longer being used, so we should delete those to clean up the project.
 
@@ -669,7 +671,7 @@ Now, let's see the final version of the code in action!
 
 > &lt;/iframe&gt;
 
-## Summary
+### Summary
 
 In this tutorial, you saw:
 
@@ -680,5 +682,5 @@ In this tutorial, you saw:
 
 Hopefully that has helped illustrate how to actually use these methods in practice.
 
-Next up, the [Advanced Tutorial](advanced-tutorial.md) looks at how to use RTK in an app that does async data fetching and uses TypeScript.
+Next up, the [Advanced Tutorial](./advanced-tutorial.md) looks at how to use RTK in an app that does async data fetching and uses TypeScript.
 
