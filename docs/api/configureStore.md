@@ -7,14 +7,14 @@ hide_title: true
 
 # `configureStore`
 
-A friendly abstraction over the standard Redux `createStore` function that adds good defaults
-to the store setup for a better development experience.
+Дружественная абстракция над стандартной функцией Redux `createStore`, которая добавляет полезные значения по умолчанию
+в настройку стора для удобства разработки.
 
-## Parameters
+## Параметры
 
-`configureStore` accepts a single configuration object parameter, with the following options:
+`configureStore` принимает едиственный параметр с объектом, со следующими свойствами:
 
-```ts no-transpile
+```ts
 type ConfigureEnhancersCallback = (
   defaultEnhancers: StoreEnhancer[]
 ) => StoreEnhancer[]
@@ -25,31 +25,33 @@ interface ConfigureStoreOptions<
   M extends Middlewares<S> = Middlewares<S>
 > {
   /**
-   * A single reducer function that will be used as the root reducer, or an
-   * object of slice reducers that will be passed to `combineReducers()`.
+   * Единственная функция редъюсер, которая будет использована в качестве
+   * корневого редьюсера или объект слайс-редьюсеров, которые будут переданы
+   * в `combineReducers()`.
    */
   reducer: Reducer<S, A> | ReducersMapObject<S, A>
 
   /**
-   * An array of Redux middleware to install. If not supplied, defaults to
-   * the set of middleware returned by `getDefaultMiddleware()`.
+   * Массив с Redux мидлварами. Если не передано, то по умолчанию будет
+   * использован набор мидлвар, возвращаемых `getDefaultMiddleware()`.
    */
   middleware?: ((getDefaultMiddleware: CurriedGetDefaultMiddleware<S>) => M) | M
 
   /**
-   * Whether to enable Redux DevTools integration. Defaults to `true`.
+   * Включать ли интеграцию Redux DevTools. По умолчанию `true`.
    *
-   * Additional configuration can be done by passing Redux DevTools options
+   * Дополнительную настройку можно выполнить, передав параметры Redux DevTools.
    */
   devTools?: boolean | DevToolsOptions
 
   /**
-   * The initial state, same as Redux's createStore.
-   * You may optionally specify it to hydrate the state
-   * from the server in universal apps, or to restore a previously serialized
-   * user session. If you use `combineReducers()` to produce the root reducer
-   * function (either directly or indirectly by passing an object as `reducer`),
-   * this must be an object with the same shape as the reducer map keys.
+   * Начальное состояние, аналогично Redux createStore.
+   * При желании вы можете указать его для гидратации состояния
+   * с сервера в универсальных приложениях или для восстановления
+   * ранее сериализованной пользовательской сессии
+   * Если вы используете `combReducers ()` для создания корневого редьюсера
+   * (прямо или косвенно, путем передачи объекта как `reducer`),
+   * это должен быть объект той же формы, что и объект редьюсера
    */
   preloadedState?: DeepPartial<S extends any ? S : S>
 
@@ -71,11 +73,11 @@ function configureStore<S = any, A extends Action = AnyAction>(
 
 ### `reducer`
 
-If this is a single function, it will be directly used as the root reducer for the store.
+Если это единственная функция, то она будет напрямую использована, как корневой редьюсер для стора.
 
-If it is an object of slice reducers, like `{users : usersReducer, posts : postsReducer}`,
-`configureStore` will automatically create the root reducer by passing this object to the
-[Redux `combineReducers` utility](https://redux.js.org/api/combinereducers).
+Если это объект со слайс-редьюсерами, типа `{users : usersReducer, posts : postsReducer}`,
+`configureStore` автоматически создаст корневой редъюсер, передавая этот объект в 
+[Redux `combineReducers` утилиту](https://redux.js.org/api/combinereducers).
 
 ### `middleware`
 
