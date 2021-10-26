@@ -1,6 +1,6 @@
 # Redux Toolkit
 
-[![build status](https://img.shields.io/travis/reduxjs/redux-toolkit/master.svg?style=flat-square)](https://travis-ci.org/reduxjs/redux-toolkit)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/reduxjs/redux-toolkit/CI?style=flat-square)
 [![npm version](https://img.shields.io/npm/v/@reduxjs/toolkit.svg?style=flat-square)](https://www.npmjs.com/package/@reduxjs/toolkit)
 [![npm downloads](https://img.shields.io/npm/dm/@reduxjs/toolkit.svg?style=flat-square&label=RTK+downloads)](https://www.npmjs.com/package/@reduxjs/toolkit)
 
@@ -12,15 +12,21 @@
 
 ### Используя Create React App
 
-Рекомендованный путь для старта новых приложений с React и Redux Toolkit, использовать [официальный шаблон Redux+JS](https://github.com/reduxjs/cra-template-redux) для [Create React App](https://github.com/facebook/create-react-app), который использует преимущества интеграции React Redux с компонентами React.
+Рекомендованный путь для старта новых приложений с React и Redux Toolkit, воспользоваться [официальным шаблоном Redux+JS](https://github.com/reduxjs/cra-template-redux) для [Create React App](https://github.com/facebook/create-react-app), который использует преимущество интеграции React Redux с компонентами React.
 
 ```sh
 npx create-react-app my-app --template redux
 ```
 
+Или, если вы пользователь TypeScript, используя [cra-template-redux-typescript](https://github.com/reduxjs/cra-template-redux-typescript), который использует этот темплейт
+
+```sh
+npx create-react-app my-app --template redux-typescript
+```
+
 ### Как отдельное приложение
 
-Redux Toolkit доступен, как NPM-пакет, для использования с бандлером или в Node приложении:
+Redux Toolkit доступен, как NPM-пакет для использования с бандлером или в Node приложении:
 
 ```bash
 # NPM
@@ -41,9 +47,11 @@ UMD пакет может использоваться напрямую чере
 - "Мне нужно добавить много пакетов, чтобы Redux делал что-нибудь полезное"
 - "Redux требует слишком много шаблонного кода"
 
-Мы не можем покрыть все варианты использования, но в духе[`create-react-app`](https://github.com/facebook/create-react-app) и [`apollo-boost`](https://dev-blog.apollodata.com/zero-config-graphql-state-management-27b1f1b3c2c3), мы можем попыпаться предоставить некоторые инструменты, которые абстрагируют процесс настройки и покрывают наиболее распространенные варианты использования, а также предоставить некоторые полезные утилиты, которые позволят пользователю упростить код своего приложения.
+Мы не можем покрыть все варианты использования, но в духе[`create-react-app`](https://github.com/facebook/create-react-app) и [`apollo-boost`](https://www.apollographql.com/blog/announcement/frontend/zero-config-graphql-state-management/)), мы можем попыпаться предоставить некоторые инструменты, которые абстрагируют процесс настройки и покрывают наиболее распространенные варианты использования, а также предоставить некоторые полезные утилиты, которые позволят пользователю упростить код своего приложения.
 
-Из-за этого размер этого пакета намеренно ограничен. Он _не_ обращается к таким концепциям, как "переиспользуемые инкапсулированные модули Redux", кэширование данных, структура папок или файлов, отношения управляющих сущностей в сторе и т. д.
+Из-за этого размер этого пакета намеренно ограничен. Он _не_ обращается к таким концепциям, как "переиспользуемые инкапсулированные модули Redux",  структура папок или файлов, отношения управляющих сущностей в сторе и т. д.
+
+Redux Toolkit также включает мощную возможность запроса и кэширования данных, которую мы назвали "RTK Query". Он доступен в пакете  по  отдельному пути. Это необязательно, но может избавить от необходимости вручную писать логику запроса данных.
 
 ## Что включено
 
@@ -57,6 +65,34 @@ Redux Toolkit предоставляет следующие API:
 - [`createEntityAdapter`](../api/createEntityAdapter.mdx): создает набор переиспользуемых редьюсеров и селекторов, для управления нормализованными данными в сторе
 - [Утилита`createSelector`](../api/createSelector.mdx) из библиотеки [Reselect](https://github.com/reduxjs/reselect) , реэкспортируемая для удобства использования.
 
-## Documentation
+## RTK Query
 
-The Redux Toolkit docs are available at **https://redux-toolkit.js.org**.
+**RTK Query** поставляется как дополнительный модуль в пакете @reduxjs/toolkit. Он специально создан для решения вопросов выборки и кэширования данных, предоставляя компактный, но мощный набор инструментов для определения уровня интерфейса API для вашего приложения. Он предназначен для упрощения основных случаев загрузки данных в веб-приложение, устраняя необходимость вручную писать логику выборки и кэширования данных. 
+
+RTK Query построен на основе ядра Redux Toolkit, используя внутреннюю архитектуру [Redux](https://redux.js.org/). Хотя знание Redux и RTK не требуется для использования RTK Query, вам следует изучить все дополнительные возможности управления глобальным хранилищем, которые они предоставляют, а также установить [расширение браузера Redux DevTools](https://github.com/reduxjs/ redux-devtools), который безупречно работает с RTK Query для просмотра и воспроизведения временной шкалы вашего запроса и поведения кеша.
+
+RTK Query включен в установку основного пакета Redux Toolkit. Он доступен через любой из двух вариантов:
+
+```ts no-transpile
+import { createApi } from '@reduxjs/toolkit/query'
+
+/* Точка входа, специфичная для React, которая автоматически генерирует
+    хуки, соответствующие определенным конечным точкам */
+import { createApi } from '@reduxjs/toolkit/query/react'
+```
+
+### Что включено
+
+RTK Query включает следующие API:
+
+- `createApi()`: Ядро функциональности RTK Query. Он позволяет вам определять набор эндпоинтов, описывающих, как извлекать данные из серии эндпоинтов, включая конфигурацию того, как извлекать и преобразовывать эти данные. В большинстве случаев вы должны использовать это один раз для каждого приложения, используя в качестве практического правила «один фрагмент API на базовый URL-адрес».
+- `fetchBaseQuery()`: Небольшая оболочка для fetch, которая упрощает запросы. Предназначен как рекомендуемый baseQuery для использования в createApi для большинства пользователей.
+- `<ApiProvider />`: Может использоваться в качестве Provider, если у вас еще нет стора Redux.
+- `setupListeners()`: Утилита, используемая для включения поведения refetchOnMount и refetchOnReconnect.
+
+См. страницу [**Обзор RTK Query**](https://redux-toolkit.js.org/rtk-query/overview) для получения дополнительных сведений о том, что такое RTK Query, какие проблемы он решает и как его использовать.
+
+## Документация
+
+Документация Redux Toolkit доступна по адресу **https://redux-toolkit.js.org**.
+
