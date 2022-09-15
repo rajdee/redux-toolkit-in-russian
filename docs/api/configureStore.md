@@ -12,7 +12,7 @@ hide_title: true
 
 ## Параметры
 
-`configureStore` принимает едиственный параметр с объектом, со следующими свойствами:
+`configureStore` принимает единственный параметр с объектом, со следующими свойствами:
 
 ```ts
 type ConfigureEnhancersCallback = (

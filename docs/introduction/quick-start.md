@@ -8,7 +8,7 @@
 - "Мне нужно добавить много пакетов, чтобы Redux делал что-нибудь полезное"
 - "Redux требует слишком много шаблонного кода"
 
-Мы не можем покрыть все варианты использования, но в духе[`create-react-app`](https://github.com/facebook/create-react-app) и [`apollo-boost`](https://www.apollographql.com/blog/announcement/frontend/zero-config-graphql-state-management/), мы можем попыпаться предоставить некоторые инструменты, которые абстрагируются от процесса установки и покрывают наиболее распространенные варианты использования, а также предоставить некоторые полезные утилиты, которые позволят пользователю упростить код своего приложения.
+Мы не можем покрыть все варианты использования, но в духе[`create-react-app`](https://github.com/facebook/create-react-app) и [`apollo-boost`](https://www.apollographql.com/blog/announcement/frontend/zero-config-graphql-state-management/), мы можем попытаться предоставить некоторые инструменты, которые абстрагируются от процесса установки и покрывают наиболее распространенные варианты использования, а также предоставить некоторые полезные утилиты, которые позволят пользователю упростить код своего приложения.
 
 Redux Toolkit also includes a powerful data fetching and caching capability that we've dubbed ["RTK Query"](#rtk-query). It's included in the package as a separate set of entry points. It's optional, but can eliminate the need to hand-write data fetching logic yourself.
 
